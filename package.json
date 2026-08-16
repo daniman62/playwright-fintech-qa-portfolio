@@ -1,0 +1,14 @@
+{
+  "name": "playwright-fintech-qa-portfolio",
+  "version": "1.0.0",
+  "description": "QA Engineering portfolio showcasing Playwright, TypeScript, API testing, CI/CD, test strategy, and AI-assisted quality engineering.",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.2.0"
+  }
+}
