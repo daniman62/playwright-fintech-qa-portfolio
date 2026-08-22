@@ -1,17 +1,20 @@
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../../pages/LoginPage';
+
+test.describe('Authentication', () => {
+  let loginPage: LoginPage;
+
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
+  });
+
 //Given a valid user exists
 //When the user enters valid credentials and clicks Login
 //Then the application should redirect to the inventory page
 
-import { test, expect } from '@playwright/test';
-
-test.describe('Authentication', () => {
-
   test('AUTH-001 - Valid user can log in successfully', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-
-    await page.locator('[data-test="username"]').fill('standard_user');
-    await page.locator('[data-test="password"]').fill('secret_sauce');
-    await page.locator('[data-test="login-button"]').click();
+    await loginPage.login('standard_user', 'secret_sauce');
 
     await expect(page).toHaveURL(/inventory/);
   });
@@ -21,13 +24,9 @@ test.describe('Authentication', () => {
 //Then the application should display error message
 
   test('AUTH-002 - Invalid password', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
+    await loginPage.login('standard_user', 'invalidpass_sauce');
 
-    await page.locator('[data-test="username"]').fill('standard_user');
-    await page.locator('[data-test="password"]').fill('invalidpass_sauce');
-    await page.locator('[data-test="login-button"]').click();
-
-    await expect(page.locator('[data-test="error"]'))
+    await expect(loginPage.errorMessage)
       .toContainText('Username and password do not match');
   });
 
@@ -36,12 +35,9 @@ test.describe('Authentication', () => {
 //Then the application should display error message
 
   test('AUTH-003 - Password is required', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
+    await loginPage.login('standard_user');
 
-    await page.locator('[data-test="username"]').fill('standard_user');
-    await page.locator('[data-test="login-button"]').click();
-
-    await expect(page.locator('[data-test="error"]'))
+    await expect(loginPage.errorMessage)
       .toContainText('Password is required');
   });
 
@@ -50,13 +46,9 @@ test.describe('Authentication', () => {
 //Then the application should display error message
 
   test('AUTH-004 - Locked-out user cannot log in', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
+    await loginPage.login('locked_out_user', 'secret_sauce');
 
-    await page.locator('[data-test="username"]').fill('locked_out_user');
-    await page.locator('[data-test="password"]').fill('secret_sauce');
-    await page.locator('[data-test="login-button"]').click();
-
-    await expect(page.locator('[data-test="error"]'))
+    await expect(loginPage.errorMessage)
       .toContainText('Sorry, this user has been locked out');
   });
 
