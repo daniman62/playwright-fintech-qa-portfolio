@@ -59,10 +59,6 @@ The current automated suite covers both UI and API testing using the SauceDemo t
 | AUTH-003 | Missing password | Negative | ✅ |
 | AUTH-004 | Locked-out user | Negative | ✅ |
 | AUTH-005 | User logout | Functional | ✅ |
-| API-001 | Retrieve a valid user | API | ✅ |
-| API-002 | Create a new user | API | ✅ |
-| API-003 | Request a non-existing user | API | ✅ |
-| API-004 | Validate user response structure and data types | API | ✅ |
 
 All scenarios are currently executed across:
 
@@ -236,7 +232,7 @@ The automated suite currently executes against:
 
 ### Current CI Result
 
-**19 automated test executions passing successfully across all three supported browsers.** ✅
+**19 automated test executions passing successfully: 15 UI executions across Chromium, Firefox and WebKit, plus 4 API executions through the dedicated API project.** ✅
 
 Current distribution:
 
@@ -467,10 +463,10 @@ Cross-browser execution is performed both locally and through the GitHub Actions
 - [x] Negative API testing
 - [x] API response structure validation
 - [x] Separate UI and API Playwright projects
+- [x] Reusable test-data fixtures
 
 ### In Progress
 
-- [ ] Reusable test-data fixtures
 - [ ] Data-driven testing
 - [ ] Test data management
 
@@ -540,7 +536,7 @@ The long-term objective is to expand the repository toward scenarios representat
 - 4 automated API scenarios
 - Positive and negative coverage
 - GET and POST validation
-- Response structure and data-type valid
+- Response structure and data-type validation
 
 **Framework**
 
@@ -548,7 +544,7 @@ The long-term objective is to expand the repository toward scenarios representat
 - Dedicated UI and API projects
 - GitHub Actions CI enabled
 - QA documentation implemented
-- Reusable fixtures being introduced
+- Reusable test-data fixtures implemented
 
 **Regression Status**
 
