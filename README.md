@@ -1,7 +1,3 @@
-# playwright-fintech-qa-portfolio
-
-QA Engineering portfolio showcasing Playwright, TypeScript, API testing, CI/CD, test strategy, and AI-assisted quality engineering.
-
 # Fintech QA Engineering Portfolio
 
 A Software Quality Engineering portfolio demonstrating practical QA strategy, test automation, cross-browser testing, CI/CD, traceability, and maintainable test architecture using **Playwright and TypeScript**.
