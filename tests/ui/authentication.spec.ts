@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
+import { InventoryPage } from '../../pages/InventoryPage';
 
 test.describe('Authentication', () => {
   let loginPage: LoginPage;
@@ -52,4 +53,17 @@ test.describe('Authentication', () => {
       .toContainText('Sorry, this user has been locked out');
   });
 
+
+  test('AUTH-005 - User can log out successfully', async ({ page }) => {
+    const inventoryPage = new InventoryPage(page);
+
+    await loginPage.login('standard_user', 'secret_sauce');
+
+    await expect(page).toHaveURL(/inventory/);
+
+    await inventoryPage.logout();
+
+    await expect(page).toHaveURL('https://www.saucedemo.com/');
+    await expect(loginPage.usernameInput).toBeVisible();
+});
 });
