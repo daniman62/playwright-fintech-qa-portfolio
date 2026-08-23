@@ -19,6 +19,7 @@ I created this portfolio to demonstrate and continue developing my technical Qua
 - Test Automation
 - Page Object Model
 - API Testing
+- Data-driven Testing and Fixtures
 - Cross-Browser Testing
 - CI/CD
 - QA Strategy
@@ -33,10 +34,12 @@ The objective is to combine traditional QA practices with modern Quality Enginee
 
 | Area | Technology |
 |---|---|
-| Automation Framework | Playwright |
+| UI Automation Framework | Playwright |
+| API Testing | Playwright APIRequestContext|
 | Programming Language | TypeScript |
 | Runtime | Node.js |
 | Test Architecture | Page Object Model |
+| Test Data | Reusable fixtures |
 | CI/CD | GitHub Actions |
 | Version Control | Git / GitHub |
 | IDE | Visual Studio Code |
@@ -46,8 +49,9 @@ The objective is to combine traditional QA practices with modern Quality Enginee
 
 ## 🧪 Current Test Coverage
 
-The current automated suite covers authentication functionality using the SauceDemo testing application.
+The current automated suite covers both UI and API testing using the SauceDemo testing application.
 
+### UI Authentication Coverage
 | Test ID | Scenario | Type | Automated |
 |---|---|---|---|
 | AUTH-001 | Valid user login | Positive | ✅ |
@@ -55,6 +59,10 @@ The current automated suite covers authentication functionality using the SauceD
 | AUTH-003 | Missing password | Negative | ✅ |
 | AUTH-004 | Locked-out user | Negative | ✅ |
 | AUTH-005 | User logout | Functional | ✅ |
+| API-001 | Retrieve a valid user | API | ✅ |
+| API-002 | Create a new user | API | ✅ |
+| API-003 | Request a non-existing user | API | ✅ |
+| API-004 | Validate user response structure and data types | API | ✅ |
 
 All scenarios are currently executed across:
 
@@ -62,7 +70,20 @@ All scenarios are currently executed across:
 - Firefox
 - WebKit
 
-This results in **15 automated cross-browser test executions** for the current authentication regression suite.
+This results in **5 UI scenarios x 3 browser engines = 15 automated cross-browser test executions** for the current authentication regression suite.
+
+### API Coverage
+| Test ID | Scenario | Type | Automated |
+|---|---|---|---|
+| API-001 | Retrieve a valid user | Positive GET | ✅ |
+| API-002 | Create a new user | Positive POST | ✅ |
+| API-003 | Request a non-existing user | Negative| ✅ |
+| API-004 | Validate user response structure and data types | Contract Validation | ✅ |
+
+API scenarios are executed once through the dedicated Playwright API project.
+
+### Current Regression Suite
+15 UI executions + 4 API scenarios = 19 automated test executions ✅
 
 ---
 
@@ -80,17 +101,24 @@ playwright-fintech-qa-portfolio/
 │   ├── traceability-matrix.md
 │   └── test-cases.md
 │
+├── fixtures/
+│   └── test-data.ts
+│
 ├── pages/
 │   ├── LoginPage.ts
 │   └── InventoryPage.ts
 │
 ├── tests/
+│   ├── api/
+│   │   └── users-api.spec.ts
+│   │
 │   └── ui/
 │       └── authentication.spec.ts
 │
 ├── package.json
 ├── package-lock.json
 ├── playwright.config.ts
+├── tsconfig.json
 └── README.md
 ```
 
@@ -98,27 +126,31 @@ playwright-fintech-qa-portfolio/
 
 ## 🧩 Test Architecture
 
+The project separates responsibilities across multiple layers.
+
+### Page Objects
+
 The project uses the **Page Object Model (POM)** to separate test logic from UI implementation details.
 
-### `LoginPage.ts`
+#### `LoginPage.ts`
 
 The Login Page Object currently manages:
 
+- Login page navigation
 - Username input
 - Password input
 - Login button
 - Authentication error messages
-- Navigation to the login page
 - Login behavior
 
-### `InventoryPage.ts`
+#### `InventoryPage.ts`
 
 The Inventory Page Object currently manages:
 
 - Application menu
 - Logout functionality
 
-This architecture keeps selectors and page-specific interactions outside the test specifications.
+This architecture keeps selectors and UI interaction logic outside the test specifications.
 
 For example, instead of repeatedly implementing login actions directly inside each test:
 
@@ -142,6 +174,43 @@ This approach improves:
 - Separation of responsibilities
 - Scalability as the automation suite grows
 
+
+### UI Tests
+
+UI tests are stored under:
+
+tests/ui/
+
+These tests validate browser-based functionality and execute across Chromium, Firefox, and WebKit.
+
+
+### API Tests
+
+API tests are stored under:
+
+tests/api/
+
+They use Playwright's request capabilities to validate REST API behavior independently from browser execution.
+
+The API suite currently covers:
+
+- GET requests
+- POST requests
+- HTTP status-code validation
+- Positive scenarios
+- Negative scenarios
+- Response-body validation
+- Data-type validation
+
+
+### Fixtures
+
+Reusable test data is stored under:
+
+fixtures/
+
+This layer is intended to reduce duplicated hardcoded data and improve maintainability as the test suite grows.
+
 ---
 
 ## 🔄 Continuous Integration
@@ -154,9 +223,10 @@ The current CI workflow:
 2. Configures the Node.js environment.
 3. Installs project dependencies.
 4. Installs Playwright browsers.
-5. Executes the automated test suite.
-6. Generates the Playwright test report.
-7. Uploads the report as a workflow artifact.
+5. Executes UI tests across supported browsers.
+6. Executes API tests through the dedicated API project.
+7. Generates the Playwright test report.
+8. Uploads the report as a workflow artifact.
 
 The automated suite currently executes against:
 
@@ -166,9 +236,48 @@ The automated suite currently executes against:
 
 ### Current CI Result
 
-**15 automated test executions passing across all three supported browsers.** ✅
+**19 automated test executions passing successfully across all three supported browsers.** ✅
+
+Current distribution:
+
+5 UI scenarios
+×
+3 browser engines
+=
+15 UI executions
+
+4 API scenarios
+×
+1 API project
+=
+4 API executions
+
+Total = 19 automated executions
 
 This provides continuous validation that changes committed to the repository do not break the existing regression suite.
+
+---
+
+## 🌐 Cross-Browser and API Project Configuration
+
+Playwright is configured with separate projects for UI and API testing.
+
+### UI Projects
+Chromium
+Firefox
+WebKit
+
+UI tests are matched from:
+
+tests/ui/
+
+### API Project
+
+API tests are executed through a dedicated project and matched from:
+
+tests/api/
+
+This prevents API scenarios from being unnecessarily executed once per browser.
 
 ---
 
@@ -352,16 +461,24 @@ Cross-browser execution is performed both locally and through the GitHub Actions
 - [x] Authentication test plan
 - [x] Requirements traceability matrix
 - [x] Documented authentication test cases
+- [x] Playwright API testing
+- [x] GET API validation
+- [x] POST API validation
+- [x] Negative API testing
+- [x] API response structure validation
+- [x] Separate UI and API Playwright projects
+
+### In Progress
+
+- [ ] Reusable test-data fixtures
+- [ ] Data-driven testing
+- [ ] Test data management
 
 ### Planned
 
 - [ ] Checkout / transaction workflow automation
-- [ ] API testing using Playwright
-- [ ] Positive and negative API scenarios
-- [ ] API response validation
-- [ ] Data-driven testing
-- [ ] Reusable test fixtures
-- [ ] Test data management
+- [ ] Additional API scenarios
+- [ ] API schema validation
 - [ ] Environment configuration
 - [ ] API/UI integration scenarios
 - [ ] Sample defect reports
@@ -412,15 +529,30 @@ The long-term objective is to expand the repository toward scenarios representat
 
 ## 📈 Current Status
 
-**Authentication Regression Suite**
+**UI Automation**
 
-- 5 automated scenarios
+- 5 automated authentication scenarios
 - 3 browser engines
 - 15 cross-browser executions
+
+**API Automation**
+
+- 4 automated API scenarios
+- Positive and negative coverage
+- GET and POST validation
+- Response structure and data-type valid
+
+**Framework**
+
 - Page Object Model implemented
+- Dedicated UI and API projects
 - GitHub Actions CI enabled
 - QA documentation implemented
-- Current regression status: **PASSING** ✅
+- Reusable fixtures being introduced
+
+**Regression Status**
+
+- 19 automated executions currently **PASSING** ✅
 
 ---
 
