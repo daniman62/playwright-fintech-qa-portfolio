@@ -49,7 +49,7 @@ The objective is to combine traditional QA practices with modern Quality Enginee
 
 ## 🧪 Current Test Coverage
 
-The current automated suite covers both UI and API testing using the SauceDemo testing application.
+The current automated suite covers UI testing using SauceDemo and REST API testing using JSONPlaceholder.
 
 ### UI Authentication Coverage
 | Test ID | Scenario | Type | Automated |
@@ -175,7 +175,7 @@ This approach improves:
 
 UI tests are stored under:
 
-tests/ui/
+`tests/ui/`
 
 These tests validate browser-based functionality and execute across Chromium, Firefox, and WebKit.
 
@@ -184,7 +184,7 @@ These tests validate browser-based functionality and execute across Chromium, Fi
 
 API tests are stored under:
 
-tests/api/
+`tests/api/`
 
 They use Playwright's request capabilities to validate REST API behavior independently from browser execution.
 
@@ -203,9 +203,9 @@ The API suite currently covers:
 
 Reusable test data is stored under:
 
-fixtures/
+`fixtures/`
 
-This layer is intended to reduce duplicated hardcoded data and improve maintainability as the test suite grows.
+This layer centralizes reusable test data, reduces duplicated hardcoded values, and improves maintainability as the test suite grows.
 
 
 ### Data-Driven Testing
@@ -274,13 +274,13 @@ WebKit
 
 UI tests are matched from:
 
-tests/ui/
+`tests/ui/`
 
 ### API Project
 
 API tests are executed through a dedicated project and matched from:
 
-tests/api/
+`tests/api/`
 
 This prevents API scenarios from being unnecessarily executed once per browser.
 
@@ -477,14 +477,14 @@ Cross-browser execution is performed both locally and through the GitHub Actions
 
 ### In Progress
 
-- [ ] Test data management
+- [ ] Checkout / transaction workflow automation
 
 ### Planned
 
-- [ ] Checkout / transaction workflow automation
 - [ ] Additional API scenarios
 - [ ] API schema validation
 - [ ] Environment configuration
+- [ ] Environment-specific test data management
 - [ ] API/UI integration scenarios
 - [ ] Sample defect reports
 - [ ] AI-assisted testing documentation
