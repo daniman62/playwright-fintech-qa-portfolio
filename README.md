@@ -10,7 +10,7 @@ This project is designed to demonstrate not only how automated tests are impleme
 
 ## 👋 About This Project
 
-I am a Software Quality Assurance professional with experience across banking, fintech, and online gaming environments.
+I am a Software Quality Assurance professional with experience across banking, fintech, and online gaming (also known as iGaming) environments.
 
 I created this portfolio to demonstrate and continue developing my technical Quality Engineering skills, particularly in:
 
@@ -93,34 +93,6 @@ playwright-fintech-qa-portfolio/
 ├── playwright.config.ts
 └── README.md
 ```
-
----
-
-## 🧩 Test Architecture
-
-The project uses the **Page Object Model (POM)** to separate test logic from UI implementation details.
-
-### `LoginPage.ts`
-
-The Login Page Object currently manages:
-
-- Username input
-- Password input
-- Login button
-- Authentication error messages
-- Navigation to the login page
-- Login behavior
-
-### `InventoryPage.ts`
-
-The Inventory Page Object currently manages:
-
-- Application menu
-- Logout functionality
-
-This architecture keeps selectors and page-specific interactions outside the test specifications.
-
-For example, instead of repeatedly implementing login actions directly inside each test:```
 
 ---
 
@@ -282,7 +254,7 @@ Before running the project locally, make sure the following are installed:
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/daniman62/playwright-fintech-qa-portfolio.git
 ```
 
 Navigate to the project:

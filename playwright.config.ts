@@ -34,20 +34,28 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
+  {
+    name: 'api',
+    testMatch: /.*\/api\/.*\.spec\.ts/,
+  },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+  {
+    name: 'chromium',
+    testMatch: /.*\/ui\/.*\.spec\.ts/,
+    use: { ...devices['Desktop Chrome'] },
+  },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+  {
+    name: 'firefox',
+    testMatch: /.*\/ui\/.*\.spec\.ts/,
+    use: { ...devices['Desktop Firefox'] },
+  },
+
+  {
+    name: 'webkit',
+    testMatch: /.*\/ui\/.*\.spec\.ts/,
+    use: { ...devices['Desktop Safari'] },
+  },
 
     /* Test against mobile viewports. */
     // {
@@ -68,8 +76,8 @@ export default defineConfig({
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
-  ],
-
+],
+     
   /* Run your local dev server before starting the tests */
   // webServer: {
   //   command: 'npm run start',
