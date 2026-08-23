@@ -73,7 +73,7 @@ This results in **5 UI scenarios x 3 browser engines = 15 automated cross-browse
 |---|---|---|---|
 | API-001 | Retrieve a valid user | Positive GET | ✅ |
 | API-002 | Create a new user | Positive POST | ✅ |
-| API-003 | Request a non-existing user | Negative| ✅ |
+| API-003 | Request a non-existing user | Negative | ✅ |
 | API-004 | Validate user response structure and data types | Contract Validation | ✅ |
 
 API scenarios are executed once through the dedicated Playwright API project.
@@ -206,6 +206,15 @@ Reusable test data is stored under:
 fixtures/
 
 This layer is intended to reduce duplicated hardcoded data and improve maintainability as the test suite grows.
+
+
+### Data-Driven Testing
+
+Negative authentication scenarios are implemented using a data-driven approach.
+
+Test inputs, expected results, and scenario metadata are defined in reusable datasets and dynamically consumed by the Playwright test suite.
+
+This approach reduces duplicated test code, improves maintainability, and makes it easier to expand authentication coverage by adding new datasets without duplicating test logic.
 
 ---
 
@@ -464,10 +473,10 @@ Cross-browser execution is performed both locally and through the GitHub Actions
 - [x] API response structure validation
 - [x] Separate UI and API Playwright projects
 - [x] Reusable test-data fixtures
+- [x] Data-driven testing
 
 ### In Progress
 
-- [ ] Data-driven testing
 - [ ] Test data management
 
 ### Planned
