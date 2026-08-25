@@ -44,3 +44,15 @@ export const invalidLoginScenarios = [
     expectedError: 'Sorry, this user has been locked out',
   },
 ];
+
+export const checkoutData = {
+  customer: {
+    firstName: 'Daniel',
+    lastName: 'Espinosa',
+    postalCode: '80123',
+  },
+
+  product: {
+    name: 'Sauce Labs Bike Light',
+  },
+};

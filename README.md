@@ -35,7 +35,7 @@ The objective is to combine traditional QA practices with modern Quality Enginee
 | Area | Technology |
 |---|---|
 | UI Automation Framework | Playwright |
-| API Testing | Playwright APIRequestContext|
+| API Testing | Playwright APIRequestContext |
 | Programming Language | TypeScript |
 | Runtime | Node.js |
 | Test Architecture | Page Object Model |
@@ -66,7 +66,7 @@ All scenarios are currently executed across:
 - Firefox
 - WebKit
 
-This results in **5 UI scenarios x 3 browser engines = 15 automated cross-browser test executions** for the current authentication regression suite.
+This results in **6 UI scenarios × 3 browser engines = 18 automated cross-browser test executions** for the current authentication regression suite.
 
 ### API Coverage
 | Test ID | Scenario | Type | Automated |
@@ -79,7 +79,7 @@ This results in **5 UI scenarios x 3 browser engines = 15 automated cross-browse
 API scenarios are executed once through the dedicated Playwright API project.
 
 ### Current Regression Suite
-15 UI executions + 4 API scenarios = 19 automated test executions ✅
+18 UI executions + 4 API scenarios = 22 automated test executions ✅
 
 ---
 
@@ -241,15 +241,16 @@ The automated suite currently executes against:
 
 ### Current CI Result
 
-**19 automated test executions passing successfully: 15 UI executions across Chromium, Firefox and WebKit, plus 4 API executions through the dedicated API project.** ✅
+**22 automated test executions passing successfully: 18 UI executions across Chromium, Firefox and WebKit, plus 4 API executions through the dedicated API project.** ✅
 
 Current distribution:
 
-5 UI scenarios
+```text
+6 UI scenarios
 ×
 3 browser engines
 =
-15 UI executions
+18 UI executions
 
 4 API scenarios
 ×
@@ -257,7 +258,8 @@ Current distribution:
 =
 4 API executions
 
-Total = 19 automated executions
+Total = 22 automated executions
+```
 
 This provides continuous validation that changes committed to the repository do not break the existing regression suite.
 
@@ -268,9 +270,9 @@ This provides continuous validation that changes committed to the repository do 
 Playwright is configured with separate projects for UI and API testing.
 
 ### UI Projects
-Chromium
-Firefox
-WebKit
+- Chromium
+- Firefox
+- WebKit
 
 UI tests are matched from:
 
@@ -436,11 +438,11 @@ Playwright is currently configured to execute the test suite against three brows
 With the current five authentication scenarios:
 
 ```text
-5 test scenarios
+6 test scenarios
 ×
 3 browser engines
 =
-15 automated test executions
+18 automated test executions
 ```
 
 Cross-browser execution is performed both locally and through the GitHub Actions CI pipeline.
@@ -474,10 +476,11 @@ Cross-browser execution is performed both locally and through the GitHub Actions
 - [x] Separate UI and API Playwright projects
 - [x] Reusable test-data fixtures
 - [x] Data-driven testing
+- [x] Checkout / transaction workflow automation
 
 ### In Progress
 
-- [ ] Checkout / transaction workflow automation
+- [ ] Additionsl Checkout / transaction workflow automation
 
 ### Planned
 
@@ -536,9 +539,9 @@ The long-term objective is to expand the repository toward scenarios representat
 
 **UI Automation**
 
-- 5 automated authentication scenarios
+- 6 automated authentication scenarios
 - 3 browser engines
-- 15 cross-browser executions
+- 18 cross-browser executions
 
 **API Automation**
 
@@ -557,7 +560,7 @@ The long-term objective is to expand the repository toward scenarios representat
 
 **Regression Status**
 
-- 19 automated executions currently **PASSING** ✅
+- 22 automated executions currently **PASSING** ✅
 
 ---
 
