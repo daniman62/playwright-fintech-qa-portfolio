@@ -30,7 +30,7 @@ The objective is to combine traditional QA practices with modern Quality Enginee
 
 ---
 
-## 🛠 Technology Stack
+## 🛠 Tech Stack
 
 | Area | Technology |
 |---|---|
@@ -60,13 +60,22 @@ The current automated suite covers UI testing using SauceDemo and REST API testi
 | AUTH-004 | Locked-out user | Negative | ✅ |
 | AUTH-005 | User logout | Functional | ✅ |
 
+### UI Checkout Coverage
+| Test ID | Scenario | Type | Automated |
+|---|---|---|---|
+| E2E-001 | Valid user must be able to complete a purchase | Positive E2E | ✅ |
+| E2E-002 | Checkout with missing First Name | Negative E2E | ✅ |
+| E2E-003 | Checkout with missing Last Name | Negative E2E | ✅ |
+| E2E-004 | Checkout with missing ZIP/Postal Code | Negative E2E | ✅ |
+
+
 All scenarios are currently executed across:
 
 - Chromium
 - Firefox
 - WebKit
 
-This results in **6 UI scenarios × 3 browser engines = 18 automated cross-browser test executions** for the current authentication regression suite.
+This results in **9 UI scenarios × 3 browser engines = 27 automated cross-browser test executions** across the current UI regression suite.
 
 ### API Coverage
 | Test ID | Scenario | Type | Automated |
@@ -79,7 +88,7 @@ This results in **6 UI scenarios × 3 browser engines = 18 automated cross-brows
 API scenarios are executed once through the dedicated Playwright API project.
 
 ### Current Regression Suite
-18 UI executions + 4 API scenarios = 22 automated test executions ✅
+27 UI executions + 4 API scenarios = 31 automated test executions ✅
 
 ---
 
@@ -93,62 +102,82 @@ playwright-fintech-qa-portfolio/
 │       └── playwright.yml
 │
 ├── docs/
+│   ├── test-cases.md
 │   ├── test-plan.md
-│   ├── traceability-matrix.md
-│   └── test-cases.md
+│   └── traceability-matrix.md
 │
 ├── fixtures/
 │   └── test-data.ts
 │
 ├── pages/
 │   ├── LoginPage.ts
-│   └── InventoryPage.ts
+│   ├── InventoryPage.ts
+│   ├── CartPage.ts
+│   └── CheckoutPage.ts
 │
 ├── tests/
 │   ├── api/
 │   │   └── users-api.spec.ts
 │   │
 │   └── ui/
-│       └── authentication.spec.ts
+│       ├── authentication.spec.ts
+│       └── checkout.spec.ts
 │
+├── .gitattributes
+├── .gitignore
+├── LICENSE
 ├── package.json
 ├── package-lock.json
 ├── playwright.config.ts
-├── tsconfig.json
-└── README.md
+├── README.md
+└── tsconfig.json
 ```
+
+### Structure Overview
+
+- **`.github/workflows/`** – GitHub Actions workflow used to execute the automated regression suite in CI.
+- **`docs/`** – QA documentation including the test plan, manual test cases, and requirements traceability matrix.
+- **`fixtures/`** – Centralized reusable test data and data-driven scenario definitions.
+- **`pages/`** – Page Object Model classes that encapsulate UI locators and reusable page interactions.
+- **`tests/api/`** – REST API automated tests implemented with Playwright `APIRequestContext`.
+- **`tests/ui/`** – Cross-browser UI automation covering authentication and end-to-end checkout workflows.
+- **`playwright.config.ts`** – Playwright configuration for browser projects, API execution, reporting, retries, and CI behavior.
 
 ---
 
 ## 🧩 Test Architecture
 
-The project separates responsibilities across multiple layers.
+The automation framework follows a layered architecture designed to separate test scenarios, page interactions, reusable test data, and execution configuration.
 
-### Page Objects
+The current architecture includes:
+
+- Page Object Model (POM)
+- UI test specifications
+- API test specifications
+- Reusable test-data fixtures
+- Data-driven test scenarios
+- Cross-browser execution
+- Dedicated UI and API Playwright projects
+- Continuous Integration through GitHub Actions
+
+### Page Object Model
 
 The project uses the **Page Object Model (POM)** to separate test logic from UI implementation details.
 
+Each Page Object is responsible for the locators and reusable interactions associated with a specific area of the application.
+
 #### `LoginPage.ts`
 
-The Login Page Object currently manages:
+The Login Page Object manages:
 
 - Login page navigation
 - Username input
 - Password input
 - Login button
 - Authentication error messages
-- Login behavior
+- Reusable login behavior
 
-#### `InventoryPage.ts`
-
-The Inventory Page Object currently manages:
-
-- Application menu
-- Logout functionality
-
-This architecture keeps selectors and UI interaction logic outside the test specifications.
-
-For example, instead of repeatedly implementing login actions directly inside each test:
+Instead of repeatedly implementing login actions directly inside each test:
 
 ```typescript
 await page.locator('[data-test="username"]').fill('standard_user');
@@ -156,39 +185,110 @@ await page.locator('[data-test="password"]').fill('secret_sauce');
 await page.locator('[data-test="login-button"]').click();
 ```
 
-the test can use the reusable Page Object method:
+tests can use the reusable Page Object method:
 
 ```typescript
 await loginPage.login('standard_user', 'secret_sauce');
 ```
 
-This approach improves:
+#### `InventoryPage.ts`
+
+The Inventory Page Object manages interactions with the product inventory, including:
+
+- Application menu
+- Logout functionality
+- Product selection
+- Adding the Sauce Labs Bike Light to the shopping cart
+- Shopping cart access
+- Shopping cart badge validation
+
+#### `CartPage.ts`
+
+The Cart Page Object manages the shopping-cart stage of the purchase workflow, including:
+
+- Selected product identification
+- Cart-content validation
+- Checkout initiation
+
+#### `CheckoutPage.ts`
+
+The Checkout Page Object manages the checkout and order-completion workflow, including:
+
+- First Name input
+- Last Name input
+- ZIP/Postal Code input
+- Checkout validation error messages
+- Continue action
+- Order overview product validation
+- Finish action
+- Order confirmation message
+
+This separation allows the automated tests to describe the **business workflow** while the Page Objects manage the underlying UI interactions and selectors.
+
+The approach improves:
 
 - Maintainability
 - Reusability
 - Test readability
 - Separation of responsibilities
-- Scalability as the automation suite grows
+- Selector management
+- Scalability as automation coverage grows
 
+---
 
-### UI Tests
+### UI Test Layer
 
-UI tests are stored under:
+UI test specifications are stored under:
 
 `tests/ui/`
 
-These tests validate browser-based functionality and execute across Chromium, Firefox, and WebKit.
+The current UI layer contains:
 
+#### `authentication.spec.ts`
 
-### API Tests
+Covers authentication behavior including:
 
-API tests are stored under:
+- Successful login
+- Invalid password
+- Missing password
+- Locked-out user
+- Logout
+
+Negative authentication scenarios use reusable data-driven definitions.
+
+#### `checkout.spec.ts`
+
+Covers the end-to-end purchase workflow including:
+
+- Product selection
+- Shopping cart validation
+- Checkout initiation
+- Customer information entry
+- Order overview validation
+- Successful purchase completion
+- Required First Name validation
+- Required Last Name validation
+- Required ZIP/Postal Code validation
+
+UI scenarios execute across:
+
+- Chromium
+- Firefox
+- WebKit
+
+This provides cross-browser validation of the application's critical user workflows.
+
+---
+
+### API Test Layer
+
+API test specifications are stored under:
 
 `tests/api/`
 
-They use Playwright's request capabilities to validate REST API behavior independently from browser execution.
+The current API suite uses Playwright's `APIRequestContext` to validate REST API behavior independently from browser execution.
 
-The API suite currently covers:
+Current coverage includes:
 
 - GET requests
 - POST requests
@@ -196,25 +296,139 @@ The API suite currently covers:
 - Positive scenarios
 - Negative scenarios
 - Response-body validation
+- Response structure validation
 - Data-type validation
 
+API tests execute through a dedicated Playwright API project, preventing them from being unnecessarily repeated across browser projects.
 
-### Fixtures
+---
 
-Reusable test data is stored under:
+### Test Data and Fixtures
+
+Reusable test data is centralized under:
 
 `fixtures/`
 
-This layer centralizes reusable test data, reduces duplicated hardcoded values, and improves maintainability as the test suite grows.
+The `test-data.ts` file contains reusable datasets for:
 
+- Valid authentication credentials
+- Invalid authentication credentials
+- Missing authentication data
+- Checkout customer information
+- Product information
+- Negative checkout scenarios
+- Expected validation messages
+
+Centralizing test data reduces hardcoded values inside test specifications and improves maintainability as coverage grows.
+
+It also separates:
+
+**Test logic → Test data → UI implementation**
+
+---
 
 ### Data-Driven Testing
 
-Negative authentication scenarios are implemented using a data-driven approach.
+The framework uses data-driven testing for scenarios that share the same execution flow but require different inputs and expected results.
 
-Test inputs, expected results, and scenario metadata are defined in reusable datasets and dynamically consumed by the Playwright test suite.
+This approach is currently used for:
 
-This approach reduces duplicated test code, improves maintainability, and makes it easier to expand authentication coverage by adding new datasets without duplicating test logic.
+- Negative authentication scenarios
+- Negative checkout validation scenarios
+
+For example, checkout validation scenarios define:
+
+- Test ID
+- Scenario name
+- First Name
+- Last Name
+- Postal Code
+- Expected validation message
+
+The Playwright test dynamically generates individual test scenarios from these datasets.
+
+Conceptually:
+
+```text
+Reusable Test Data
+        ↓
+Scenario Dataset
+        ↓
+Shared Test Logic
+        ↓
+Multiple Independent Tests
+```
+
+This reduces duplicated automation code while preserving individual test identification and reporting.
+
+Adding another validation scenario can therefore require primarily adding another dataset instead of duplicating the complete checkout workflow.
+
+---
+
+### End-to-End Workflow Architecture
+
+The checkout automation demonstrates interaction across multiple Page Objects as part of a single business workflow:
+
+```text
+LoginPage
+    ↓
+InventoryPage
+    ↓
+CartPage
+    ↓
+CheckoutPage
+    ↓
+Confirmation Validation
+```
+
+The automated E2E flow validates:
+
+```text
+Authentication
+    ↓
+Product Selection
+    ↓
+Cart Validation
+    ↓
+Checkout
+    ↓
+Customer Information
+    ↓
+Order Overview
+    ↓
+Purchase Completion
+```
+
+This allows the portfolio to demonstrate automation of a complete transactional workflow rather than isolated page-level tests.
+
+---
+
+### Execution Architecture
+
+Playwright uses separate projects for UI and API execution.
+
+```text
+Playwright Test
+      │
+      ├── UI Projects
+      │     ├── Chromium
+      │     ├── Firefox
+      │     └── WebKit
+      │
+      └── API Project
+            └── REST API Tests
+```
+
+The current suite contains:
+
+```text
+9 UI scenarios × 3 browsers = 27 UI executions
+4 API scenarios × 1 API project = 4 API executions
+
+Total = 31 automated executions
+```
+
+This same regression suite can be executed locally and through the GitHub Actions CI pipeline.
 
 ---
 
@@ -241,16 +455,16 @@ The automated suite currently executes against:
 
 ### Current CI Result
 
-**22 automated test executions passing successfully: 18 UI executions across Chromium, Firefox and WebKit, plus 4 API executions through the dedicated API project.** ✅
+**31 automated test executions passing successfully: 27 UI executions across Chromium, Firefox and WebKit, plus 4 API executions through the dedicated API project.** ✅
 
 Current distribution:
 
 ```text
-6 UI scenarios
+9 UI scenarios
 ×
 3 browser engines
 =
-18 UI executions
+27 UI executions
 
 4 API scenarios
 ×
@@ -258,7 +472,7 @@ Current distribution:
 =
 4 API executions
 
-Total = 22 automated executions
+Total = 31 automated executions
 ```
 
 This provides continuous validation that changes committed to the repository do not break the existing regression suite.
@@ -403,6 +617,18 @@ npx playwright test
 npx playwright test tests/ui/authentication.spec.ts
 ```
 
+### Run API Tests Only
+
+```bash
+npx playwright test tests/api/users-api.spec.ts
+```
+
+### Run Checkout Tests Only
+
+```bash
+npx playwright test tests/ui/checkout.spec.ts
+```
+
 ### Run Tests in Headed Mode
 
 ```bash
@@ -435,17 +661,38 @@ Playwright is currently configured to execute the test suite against three brows
 | Firefox | Firefox |
 | WebKit | WebKit |
 
-With the current five authentication scenarios:
+With the current authentication and Checkout/E2E scenarios:
 
 ```text
-6 test scenarios
+5 Authentication scenarios
++ 4 Checkout/E2E scenarios
+=
+9 UI scenarios
+
+9 UI scenarios
 ×
 3 browser engines
 =
-18 automated test executions
+27 automated UI executions
 ```
 
 Cross-browser execution is performed both locally and through the GitHub Actions CI pipeline.
+
+```text
+5 Authentication scenarios
++ 4 Checkout/E2E scenarios
++ 4 API scenarios
+= 13 logical automated scenarios
+```
+
+### Execution count:
+
+```text
+15 Authentication
++ 12 Checkout
++ 4 API
+= 31 executions
+```
 
 ---
 
@@ -477,10 +724,11 @@ Cross-browser execution is performed both locally and through the GitHub Actions
 - [x] Reusable test-data fixtures
 - [x] Data-driven testing
 - [x] Checkout / transaction workflow automation
+- [x] Negative Checkout validation automation
 
 ### In Progress
 
-- [ ] Additionsl Checkout / transaction workflow automation
+- [ ] Additional Checkout / transaction workflow automation
 
 ### Planned
 
@@ -539,9 +787,9 @@ The long-term objective is to expand the repository toward scenarios representat
 
 **UI Automation**
 
-- 6 automated authentication scenarios
+- 9 automated scenarios
 - 3 browser engines
-- 18 cross-browser executions
+- 27 cross-browser executions
 
 **API Automation**
 
@@ -552,15 +800,18 @@ The long-term objective is to expand the repository toward scenarios representat
 
 **Framework**
 
-- Page Object Model implemented
-- Dedicated UI and API projects
-- GitHub Actions CI enabled
-- QA documentation implemented
+- Page Object Model implemented across authentication and checkout workflows
 - Reusable test-data fixtures implemented
+- Data-driven authentication and checkout validation implemented
+- End-to-end transactional workflow implemented
+- Dedicated UI and API Playwright projects
+- Cross-browser execution across Chromium, Firefox, and WebKit
+- GitHub Actions CI enabled
+- QA documentation and traceability implemented
 
 **Regression Status**
 
-- 22 automated executions currently **PASSING** ✅
+- 31 automated executions currently **PASSING** ✅
 
 ---
 

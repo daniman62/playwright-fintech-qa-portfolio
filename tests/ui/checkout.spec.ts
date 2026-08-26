@@ -3,10 +3,15 @@ import { LoginPage } from '../../pages/LoginPage';
 import { InventoryPage } from '../../pages/InventoryPage';
 import { CartPage } from '../../pages/CartPage';
 import { CheckoutPage } from '../../pages/CheckoutPage';
-import { users, checkoutData } from '../../fixtures/test-data';
+import {
+  users,
+  checkoutData,
+  invalidCheckoutScenarios
+} from '../../fixtures/test-data';
 
 test.describe('Checkout', () => {
   test('E2E-001 - Complete a purchase successfully', async ({ page }) => {
+    // happy path scenario: valid user, valid customer information, successful checkout
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
     const cartPage = new CartPage(page);
@@ -50,3 +55,39 @@ test.describe('Checkout', () => {
       .toHaveText('Thank you for your order!');
   });
 });
+
+for (const scenario of invalidCheckoutScenarios) {
+  test(`${scenario.id} - ${scenario.name}`, async ({ page }) => {
+    // negative scenario: valid user, invalid customer information, checkout fails
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
+    const checkoutPage = new CheckoutPage(page);
+
+    await loginPage.goto();
+
+    await loginPage.login(
+      users.standard.username,
+      users.standard.password
+    );
+
+    await inventoryPage.addBikeLightToCart();
+    await inventoryPage.openCart();
+
+    await expect(cartPage.bikeLightItem)
+      .toHaveText(checkoutData.product.name);
+
+    await cartPage.checkout();
+
+    await checkoutPage.enterCustomerInformation(
+      scenario.firstName,
+      scenario.lastName,
+      scenario.postalCode
+    );
+
+    await checkoutPage.continueCheckout();
+
+    await expect(checkoutPage.errorMessage)
+      .toHaveText(scenario.expectedError);
+  });
+}

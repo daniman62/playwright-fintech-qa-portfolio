@@ -56,3 +56,30 @@ export const checkoutData = {
     name: 'Sauce Labs Bike Light',
   },
 };
+
+export const invalidCheckoutScenarios = [
+  {
+    id: 'E2E-002',
+    name: 'Checkout with missing First Name',
+    firstName: '',
+    lastName: 'Espinosa',
+    postalCode: '80123',
+    expectedError: 'Error: First Name is required',
+  },
+  {
+    id: 'E2E-003',
+    name: 'Checkout with missing Last Name',
+    firstName: 'Daniel',
+    lastName: '',
+    postalCode: '80123',
+    expectedError: 'Error: Last Name is required',
+  },
+  {
+    id: 'E2E-004',
+    name: 'Checkout with missing ZIP/Postal Code',
+    firstName: 'Daniel',
+    lastName: 'Espinosa',
+    postalCode: '',
+    expectedError: 'Error: Postal Code is required',
+  },
+];

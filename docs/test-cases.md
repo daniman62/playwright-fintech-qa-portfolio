@@ -95,3 +95,48 @@ ZIP/Postal Code: 80123
 
 **Expected Result:**  
 The Checkout: Complete page is displayed and the message **“Thank you for your order!”** is shown.
+
+---
+
+## E2E-002 - Checkout with missing First Name
+
+**Precondition:**  
+A valid user is logged in and a product has been added to the cart.
+
+**Test Data:**  
+First Name: empty  
+Last Name: Espinosa  
+ZIP/Postal Code: 80123
+
+**Expected Result:**  
+Checkout does not continue and the message **"Error: First Name is required"** is displayed.
+
+---
+
+## E2E-003 - Checkout with missing Last Name
+
+**Precondition:**  
+A valid user is logged in and a product has been added to the cart.
+
+**Test Data:**  
+First Name: Daniel  
+Last Name: empty  
+ZIP/Postal Code: 80123
+
+**Expected Result:**  
+Checkout does not continue and the message **"Error: Last Name is required"** is displayed.
+
+---
+
+## E2E-004 - Checkout with missing ZIP/Postal Code
+
+**Precondition:**  
+A valid user is logged in and a product has been added to the cart.
+
+**Test Data:**  
+First Name: Daniel  
+Last Name: Espinosa  
+ZIP/Postal Code: empty
+
+**Expected Result:**  
+Checkout does not continue and the message **"Error: Postal Code is required"** is displayed.

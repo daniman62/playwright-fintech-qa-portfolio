@@ -13,3 +13,6 @@
 | Requirement ID | Requirement | Test Case | Automated | Status |
 |---|---|---|---|---|
 | E2E-REQ-001 | Valid user must be able to complete a purchase | E2E-001 | Yes | Passed |
+| E2E-REQ-002 | First Name is required during checkout | E2E-002 | Yes | Passed |
+| E2E-REQ-003 | Last Name is required during checkout | E2E-003 | Yes | Passed |
+| E2E-REQ-004 | Postal Code is required during checkout | E2E-004 | Yes | Passed |

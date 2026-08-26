@@ -9,6 +9,7 @@ export class CheckoutPage {
   readonly finishButton: Locator;
   readonly bikeLightItem: Locator;
   readonly confirmationMessage: Locator;
+  readonly errorMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -41,6 +42,8 @@ export class CheckoutPage {
     this.confirmationMessage = page.locator(
       '[data-test="complete-header"]'
     );
+
+    this.errorMessage = page.locator('[data-test="error"]');
   }
 
   async enterCustomerInformation(
